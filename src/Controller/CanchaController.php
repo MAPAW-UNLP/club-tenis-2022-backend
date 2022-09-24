@@ -26,23 +26,40 @@ class CanchaController extends AbstractController
     }
 
 
+
     /**
-     * @Route("/canchas", name="add_canchas", methods={"POST"})
+     * @Route("/cancha", name="add_canchas", methods={"POST"})
      */
     public function addCancha(Request $request, ManagerRegistry $doctrine ): Response
     {
 
-        $name = $request->request->get('nombre');
+        $data = json_decode( $request->getContent());
+        $nombreCancha = $data->nombre;
+        
+        // dd($data, $nombreCancha);
 
         $cancha = new Cancha();
-        $cancha->setNombre($name);
+        $cancha->setNombre($nombreCancha);
 
         $em = $doctrine->getManager();
         $em->persist($cancha);
         $em->flush();
 
-        return $this->json(($name));
+    
+        $resp = array(
+            "rta"=> "error",
+            "detail"=> "Se produjo un error en el alta de la cancha."
+        );
+        if ($cancha->getId() > 0){
+
+            $resp['rta'] =  "ok";
+            $resp['detail'] = $cancha;
+
+        }
+
+        return $this->json(($resp));
     }
+
 
 
     /**
