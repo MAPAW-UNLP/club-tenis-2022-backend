@@ -53,6 +53,15 @@ class ReservaRepository extends ServiceEntityRepository
        ;
    }
 
+   public function getLastRecord(): array
+   {
+       return $this->createQueryBuilder('r')
+        ->orderBy('r.id', 'DESC')
+        ->getQuery()
+        ->getResult()
+       ;
+   }
+
 
 
 //    /**
