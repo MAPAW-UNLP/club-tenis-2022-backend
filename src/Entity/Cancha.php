@@ -22,6 +22,11 @@ class Cancha
      */
     private $nombre;
 
+    /**
+     * @ORM\Column(type="string", length=20)
+     */
+    private $tipo;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -35,6 +40,18 @@ class Cancha
     public function setNombre(string $nombre): self
     {
         $this->nombre = $nombre;
+
+        return $this;
+    }
+
+    public function getTipo(): ?string
+    {
+        return $this->tipo;
+    }
+
+    public function setTipo(string $tipo): self
+    {
+        $this->tipo = $tipo;
 
         return $this;
     }

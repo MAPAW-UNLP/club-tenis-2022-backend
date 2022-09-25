@@ -39,6 +39,16 @@ class PersonaRepository extends ServiceEntityRepository
         }
     }
 
+    public function findOneById($id): ?Persona
+   {
+       return $this->createQueryBuilder('p')
+           ->andWhere('p.id = :val')
+           ->setParameter('val', $id)
+           ->getQuery()
+           ->getOneOrNullResult()
+       ;
+   }
+
 //    /**
 //     * @return Persona[] Returns an array of Persona objects
 //     */

@@ -39,6 +39,20 @@ class GrupoRepository extends ServiceEntityRepository
         }
     }
 
+    
+
+   public function findPersonasIdByReservaId($reservaId): array
+   {
+       return $this->createQueryBuilder('g')
+           ->andWhere('g.reserva_id = :val')
+           ->setParameter('val', $reservaId)
+           ->orderBy('g.id', 'ASC')
+        //    ->setMaxResults(10)
+           ->getQuery()
+           ->getResult()
+       ;
+   }
+
 //    /**
 //     * @return Grupo[] Returns an array of Grupo objects
 //     */

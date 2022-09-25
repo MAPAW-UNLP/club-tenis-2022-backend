@@ -22,7 +22,18 @@ class CanchaController extends AbstractController
     {
         $canchas = $this->getDoctrine()->getRepository( Cancha::class )->findAll();
 
-        return $this->json($canchas);
+        $resp = array(
+            "rta"=> "error",
+            "detail"=> "Se produjo un error en el alta de la cancha."
+        );
+        if (isset($canchas)){
+
+            $resp['rta'] =  "ok";
+            $resp['detail'] = $canchas;
+
+        }
+
+        return $this->json($resp);
     }
 
 
@@ -35,11 +46,12 @@ class CanchaController extends AbstractController
 
         $data = json_decode( $request->getContent());
         $nombreCancha = $data->nombre;
+        $tipoCancha = $data->tipo;
         
-        // dd($data, $nombreCancha);
 
         $cancha = new Cancha();
         $cancha->setNombre($nombreCancha);
+        $cancha->setTipo($tipoCancha);
 
         $em = $doctrine->getManager();
         $em->persist($cancha);
