@@ -39,6 +39,22 @@ class ReservaRepository extends ServiceEntityRepository
         }
     }
 
+
+   public function findReservasBycanchaIdAndDate($canchaId, $fecha): array
+   {
+       return $this->createQueryBuilder('r')
+       ->andWhere('r.cancha_id = :val')
+       ->setParameter('val', $canchaId)
+       ->andWhere('r.fecha = :val1')
+       ->setParameter('val1', $fecha)
+        ->orderBy('r.hora_ini', 'ASC')
+        ->getQuery()
+        ->getResult()
+       ;
+   }
+
+
+
 //    /**
 //     * @return Reserva[] Returns an array of Reserva objects
 //     */
