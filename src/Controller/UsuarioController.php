@@ -41,12 +41,12 @@ class UsuarioController extends AbstractController
         if (! isset($userDB)){
             $userDB = array(
                 "rta" => "error",
-                "detail"=> "Credenciales incorrectas(1)."
+                "detail"=> "nombre de usuario y/o contrase&ntilde;a es invalido(1)."
             );
         } else if ($userDB->getPassword() !== $pass){
             $userDB = array(
                 "rta" => "error",
-                "detail"=> "Credenciales incorrectas(2)."
+                "detail"=> "nombre de usuario y/o contrase&ntilde;a es invalido(2)."
             );
         } else {
             $userDB = array(
