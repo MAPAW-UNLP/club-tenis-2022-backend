@@ -32,7 +32,7 @@ class CustomService
 
         // dd($reserva);
 
-        $canchaNombre = $this->em->getRepository(Cancha::class)->findOneById($reserva->getCanchaid())->getNombre();
+        $canchaNombre = $this->em->getRepository(Cancha::class)->findOneById($reserva->getCanchaId())->getNombre();
 
 
         $grupo = [];
@@ -87,7 +87,8 @@ class CustomService
 
     public function getFormattedDate(DateTime $fecha)
     {
-        return $fecha->format('d-m-Y');
+        // return $fecha->format('d-m-Y');
+        return $fecha->format('Y-m-d');
     }
 
     public function getPersonaByPersonaId($personaId)
