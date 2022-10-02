@@ -120,7 +120,7 @@ class ReservaController extends AbstractController
 
         $clienteParam = array(
             "nombre"=> $parametros['nombre'],
-            "apellido"=> $parametros['apellido'],
+            // "apellido"=> $parametros['apellido'],
             "telefono"=> $parametros['telefono'],
         );
 
@@ -155,7 +155,7 @@ class ReservaController extends AbstractController
 
         $alquiler = new Alquiler();
         $alquiler->setNombre($clienteParam['nombre']);
-        $alquiler->setApellido($clienteParam['apellido']);
+        // $alquiler->setApellido($clienteParam['apellido']);
         $alquiler->setTelefono($clienteParam['telefono']);
         $alquiler->setReservaId(++$lastReservaId);
 

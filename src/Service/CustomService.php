@@ -98,7 +98,7 @@ class CustomService
         // dd($persona);
         $personaObj = array(
             "nombre" => $persona->getNombre(),
-            "apellido" => $persona->getApellido(),
+            // "apellido" => $persona->getApellido(),
             "telefono" => $persona->getTelefono(),
             "fechanac" => $this->getFormattedDate($persona->getFechaNac()),
             "esalumno" => $persona->isEsAlumno(),
@@ -114,7 +114,7 @@ class CustomService
 
         $clienteObj = array(
             "nombre" => $cliente->getNombre(),
-            "apellido" => $cliente->getApellido(),
+            // "apellido" => $cliente->getApellido(),
             "telefono" => $cliente->getTelefono(),
         );
         // dd($cliente, $clienteObj);

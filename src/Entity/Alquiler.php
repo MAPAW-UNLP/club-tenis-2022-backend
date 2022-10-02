@@ -22,10 +22,10 @@ class Alquiler
      */
     private $nombre;
 
-    /**
-     * @ORM\Column(type="string", length=50)
-     */
-    private $apellido;
+    // /**
+    //  * @ORM\Column(type="string", length=50)
+    //  */
+    // private $apellido;
 
     /**
      * @ORM\Column(type="string", length=15)
@@ -54,17 +54,17 @@ class Alquiler
         return $this;
     }
 
-    public function getApellido(): ?string
-    {
-        return $this->apellido;
-    }
+    // public function getApellido(): ?string
+    // {
+    //     return $this->apellido;
+    // }
 
-    public function setApellido(string $apellido): self
-    {
-        $this->apellido = $apellido;
+    // public function setApellido(string $apellido): self
+    // {
+    //     $this->apellido = $apellido;
 
-        return $this;
-    }
+    //     return $this;
+    // }
 
     public function getTelefono(): ?string
     {
