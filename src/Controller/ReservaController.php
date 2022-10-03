@@ -165,23 +165,10 @@ class ReservaController extends AbstractController
         $em->flush();
 
 
+        $resp = array();
 
-
-
-
-
-        
-        
-
-        $resp = array(
-            "rta" => "error",
-            "detail" => "Se produjo un error en la consulta de las reservas."
-        );
-        if (isset($rtaReservas)) {
-
-            $resp['rta'] =  "ok";
-            $resp['detail'] = $rtaReservas;
-        }
+        $resp['rta'] =  "ok";
+        $resp['detail'] = "Reserva registrada correctamente";
 
 
         return $this->json($resp);
