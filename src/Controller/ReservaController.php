@@ -151,7 +151,7 @@ class ReservaController extends AbstractController
         $reservaId =  $em->persist($reserva);
         
 
-        $lastReservaId = (int) $cs->getLasReservaId();
+        $lastReservaId = (int) $cs->getLastReservaId();
 
         $alquiler = new Alquiler();
         $alquiler->setNombre($clienteParam['nombre']);
