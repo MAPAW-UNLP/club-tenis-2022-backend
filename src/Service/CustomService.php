@@ -123,12 +123,11 @@ class CustomService
     }
 
     public function getLastReservaId(){
-
-        $id = $this->em->getRepository(Reserva::class)->getLastRecord()[0]->getId();
+        $id = $this->em->getRepository(Reserva::class)->getLastRecord();
         if ($id == null){
-            $id = 0;
+            return 0;
         }
-        return $id;
+        return $id[0]->getId();
     }
 
 
