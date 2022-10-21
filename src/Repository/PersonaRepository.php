@@ -49,6 +49,34 @@ class PersonaRepository extends ServiceEntityRepository
        ;
    }
 
+    /**
+    * @return Persona[] Returns an array of Persona objects (alumnos)
+    */
+   public function findAllAlumnos(): array
+   {
+       return $this->createQueryBuilder('p')
+           ->andWhere('p.esalumno = :val')
+           ->setParameter('val', 1)
+           ->orderBy('p.id', 'ASC')
+           ->getQuery()
+           ->getResult()
+       ;
+   }
+
+    /**
+    * @return Persona[] Returns an array of Persona objects (alumnos)
+    */
+    public function findAllProfesores(): array
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.esalumno = :val')
+            ->setParameter('val', 0)
+            ->orderBy('p.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
 //    /**
 //     * @return Persona[] Returns an array of Persona objects
 //     */

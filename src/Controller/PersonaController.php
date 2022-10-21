@@ -48,8 +48,6 @@ class PersonaController extends AbstractController
         $em = $doctrine->getManager();
         $em->persist($persona);
         $em->flush();
-
-    
       
         if ($persona->getId() > 0){
 
@@ -62,6 +60,24 @@ class PersonaController extends AbstractController
         }
 
         return $this->json(($resp));
+    }
+
+    /**
+     * @Route("/alumnos", name="app_alumnos", methods={"GET"})
+     */
+    public function getAlumnos(): Response
+    {
+        $personas = $this->getDoctrine()->getRepository( Persona::class )->findAllAlumnos();
+        return $this->json($personas);
+    }
+
+    /**
+     * @Route("/profesores", name="app_profesores", methods={"GET"})
+     */
+    public function getProfesores(): Response
+    {
+        $personas = $this->getDoctrine()->getRepository( Persona::class )->findAllProfesores();
+        return $this->json($personas);
     }
 
 }
