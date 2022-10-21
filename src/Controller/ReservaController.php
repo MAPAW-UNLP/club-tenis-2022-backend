@@ -123,7 +123,7 @@ class ReservaController extends AbstractController
 
         $clienteParam = array(
             "nombre"    => isset($parametros['nombre']) ? $parametros['nombre']: null,
-            "telefono"  => $parametros['telefono'] || null,
+            "telefono"    => isset($parametros['telefono']) ? $parametros['telefono']: null,
         );
 
         $reservaParam = array(
