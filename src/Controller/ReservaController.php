@@ -15,6 +15,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+use function PHPUnit\Framework\isNan;
+
 // use App\Services\CustomService;
 
 /**
@@ -158,10 +160,12 @@ class ReservaController extends AbstractController
         if ($reservaParam['persona_id'] != null){
             $ids_grupo = explode(',',$reservaParam['grupo']);
             foreach($ids_grupo as $alumno_id){
-                $grupo_alumno = new Grupo();
-                $grupo_alumno->setReservaId($idReserva);
-                $grupo_alumno->setPersonaId($alumno_id);
-                $em->persist($grupo_alumno);
+                if (!isNan($alumno_id)){
+                    $grupo_alumno = new Grupo();
+                    $grupo_alumno->setReservaId($idReserva);
+                    $grupo_alumno->setPersonaId($alumno_id);
+                    $em->persist($grupo_alumno);
+                }
             }
 
         } else {
