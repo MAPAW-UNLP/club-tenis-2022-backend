@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Alquiler;
 use App\Entity\Cancha;
+use App\Entity\Grupo;
 use App\Entity\Persona;
 use App\Entity\Reserva;
 use App\Service\CustomService as ServiceCustomService;
@@ -119,19 +120,19 @@ class ReservaController extends AbstractController
 
 
         $clienteParam = array(
-            "nombre"=> $parametros['nombre'],
-            // "apellido"=> $parametros['apellido'],
-            "telefono"=> $parametros['telefono'],
+            "nombre"    => isset($parametros['nombre']) ? $parametros['nombre']: null,
+            "telefono"  => $parametros['telefono'] || null,
         );
 
         $reservaParam = array(
-            "cancha_id" =>  $parametros['cancha_id'],
-            "fecha" =>  new DateTime($parametros['fecha']),
-            "hora_ini" =>  new DateTime($parametros['hora_ini']),
-            "hora_fin" =>  new DateTime($parametros['hora_fin']),
-            "persona_id" =>  null,
-            "replica" =>  false,
-            "estado_id" => 0,
+            "cancha_id"     =>  $parametros['cancha_id'],
+            "fecha"         =>  new DateTime($parametros['fecha']),
+            "hora_ini"      =>  new DateTime($parametros['hora_ini']),
+            "hora_fin"      =>  new DateTime($parametros['hora_fin']),
+            "persona_id"    =>  isset($parametros['persona_id'])? $parametros['persona_id']:null,
+            "replica"       =>  (isset($parametros['replica']) && $parametros['replica'] == 'true')? true:false,
+            "estado_id"     =>  0,
+            "grupo"         => isset($parametros['grupo_ids'])? $parametros['grupo_ids']:null,
         );
 
 
@@ -152,16 +153,26 @@ class ReservaController extends AbstractController
         
 
         $lastReservaId = (int) $cs->getLastReservaId();
+        $idReserva = $lastReservaId + 1;
 
-        $alquiler = new Alquiler();
-        $alquiler->setNombre($clienteParam['nombre']);
-        // $alquiler->setApellido($clienteParam['apellido']);
-        $alquiler->setTelefono($clienteParam['telefono']);
-        $alquiler->setReservaId(++$lastReservaId);
+        if ($reservaParam['persona_id'] != null){
+            $ids_grupo = explode(',',$reservaParam['grupo']);
+            foreach($ids_grupo as $alumno_id){
+                $grupo_alumno = new Grupo();
+                $grupo_alumno->setReservaId($idReserva);
+                $grupo_alumno->setPersonaId($alumno_id);
+                $em->persist($grupo_alumno);
+            }
+
+        } else {
+            $alquiler = new Alquiler();
+            $alquiler->setNombre($clienteParam['nombre']);
+            $alquiler->setTelefono($clienteParam['telefono']);
+            $alquiler->setReservaId($idReserva);
+            $em->persist($alquiler);
+        }
 
 
-        $em->persist($alquiler);
-        // dd('alta Reserva> ',$parametros, $alquiler, $reserva);
         $em->flush();
 
 

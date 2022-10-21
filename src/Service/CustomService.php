@@ -39,7 +39,8 @@ class CustomService
         $titularReservaObj = null;
 
         if ($reserva->getPersonaId() != null) {
-
+            // es clase
+            
             $titularReservaObj = $this->getPersonaByPersonaId($reserva->getPersonaId());
 
 
