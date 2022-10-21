@@ -44,7 +44,7 @@ class CustomService
             $titularReservaObj = $this->getPersonaByPersonaId($reserva->getPersonaId());
 
 
-            $grupoPersonasId = $this->em->getRepository(Grupo::class)->findPersonasIdByReservaId($reserva->getId());
+            $grupoPersonasId = $this->em->getRepository(Grupo::class)->findPersonasGrupoIdByReservaId($reserva->getId());
 
             if (count($grupoPersonasId) > 0) {
 

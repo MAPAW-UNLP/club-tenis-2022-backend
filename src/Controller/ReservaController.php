@@ -15,10 +15,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-use function PHPUnit\Framework\isNan;
-
-// use App\Services\CustomService;
-
 /**
  * @Route(path="/api")
  */
@@ -187,5 +183,70 @@ class ReservaController extends AbstractController
 
 
         return $this->json($resp);
+    }
+
+
+    /**
+     * @Route("/profe_reserva", name="mod_profe_reserva", methods={"PUT"})
+     */
+    public function modProfeReserva(Request $request, ManagerRegistry $doctrine ): Response
+    {
+        $reservaId = $request->request->get('reserva_id');
+        $personaId = $request->request->get('persona_id');
+
+        $em = $doctrine->getManager();
+        $reserva = $em->getRepository(Reserva::class)->findOneById($reservaId);
+        $reserva->setPersonaId($personaId);
+        $em->persist($reserva);
+        $em->flush();
+
+        $resp = array();
+
+        $resp['rta'] =  "ok";
+        $resp['detail'] = "Reserva (profesor) modificada correctamente";
+
+
+        return $this->json($resp);
+
+    }
+
+        /**
+     * @Route("/grupo_reserva", name="mod_grupo_reserva", methods={"PUT"})
+     */
+    public function modGrupoReserva(Request $request, ManagerRegistry $doctrine ): Response
+    {
+        $reservaId = $request->request->get('reserva_id');
+        $grupoIds  = $request->request->get('grupo_ids');
+
+        $ids_grupo = explode(',',$grupoIds);
+
+        $em = $doctrine->getManager();
+
+        $grupoViejo = $em->getRepository(Grupo::class)->findPersonasGrupoIdByReservaId($reservaId);
+        // dd($grupoViejo, $ids_grupo);
+        foreach($grupoViejo as $personaGrupoViejo){
+            $em->getRepository(Grupo::class)->remove($personaGrupoViejo);
+        }
+
+        foreach($ids_grupo as $alumno_id){
+            if (is_numeric($alumno_id)){
+                $grupo_alumno = new Grupo();
+                $grupo_alumno->setReservaId($reservaId);
+                $grupo_alumno->setPersonaId($alumno_id);
+                $em->persist($grupo_alumno);
+            }
+        }
+
+        $reserva = $em->getRepository(Reserva::class)->findOneById($reservaId);
+        $em->flush();
+
+        $resp = array();
+
+        $resp['rta'] =  "ok";
+        $resp['detail'] = "Reserva (grupo) modificada correctamente";
+
+
+        return $this->json($resp);
+
     }
 }

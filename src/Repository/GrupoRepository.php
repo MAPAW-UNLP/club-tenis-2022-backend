@@ -41,7 +41,7 @@ class GrupoRepository extends ServiceEntityRepository
 
     
 
-   public function findPersonasIdByReservaId($reservaId): array
+   public function findPersonasGrupoIdByReservaId($reservaId): array
    {
        return $this->createQueryBuilder('g')
            ->andWhere('g.reserva_id = :val')
