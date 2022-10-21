@@ -160,7 +160,7 @@ class ReservaController extends AbstractController
         if ($reservaParam['persona_id'] != null){
             $ids_grupo = explode(',',$reservaParam['grupo']);
             foreach($ids_grupo as $alumno_id){
-                if (!isNan($alumno_id)){
+                if (is_numeric($alumno_id)){
                     $grupo_alumno = new Grupo();
                     $grupo_alumno->setReservaId($idReserva);
                     $grupo_alumno->setPersonaId($alumno_id);
