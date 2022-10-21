@@ -131,5 +131,20 @@ class CustomService
         return $id[0]->getId();
     }
 
+    public function formatearAlumno($alumno){
+
+        $fechaNac = $alumno->getFechaNac()? $this->getFormattedDate($alumno->getFechaNac()):'';
+
+        $alumnoFormateado = array(
+            "nombre"    => $alumno->getNombre(),
+            "telefono"  => $alumno->getTelefono(),
+            "fechanac"  => $fechaNac,
+            "saldo"     => 0,
+        );
+
+        return $alumnoFormateado;
+
+    }
+
 
 }

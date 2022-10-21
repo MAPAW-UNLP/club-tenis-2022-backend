@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\CustomService as ServiceCustomService;
 
     /**
      * @Route(path="/api")
@@ -65,10 +66,28 @@ class PersonaController extends AbstractController
     /**
      * @Route("/alumnos", name="app_alumnos", methods={"GET"})
      */
-    public function getAlumnos(): Response
+    public function getAlumnos(
+        ServiceCustomService $cs
+    ): Response
     {
-        $personas = $this->getDoctrine()->getRepository( Persona::class )->findAllAlumnos();
-        return $this->json($personas);
+        $alumnos = $this->getDoctrine()->getRepository( Persona::class )->findAllAlumnos();
+        $alumnosFormateado=[];
+
+        foreach($alumnos as $alumno){
+            $alumnoFormateado = $cs->formatearAlumno($alumno);
+            array_push($alumnosFormateado, $alumnoFormateado);
+        }
+        $resp = array(
+            "rta"=> "error",
+            "detail"=> "Se produjo un error en el alta de la cancha."
+        );
+        if (isset($alumnosFormateado)){
+
+            $resp['rta'] =  "ok";
+            $resp['detail'] = $alumnosFormateado;
+
+        }
+        return $this->json($resp);
     }
 
     /**
