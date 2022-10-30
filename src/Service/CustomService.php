@@ -136,6 +136,7 @@ class CustomService
         $fechaNac = $alumno->getFechaNac()? $this->getFormattedDate($alumno->getFechaNac()):'';
 
         $alumnoFormateado = array(
+            "id"    => $alumno->getId(),
             "nombre"    => $alumno->getNombre(),
             "telefono"  => $alumno->getTelefono(),
             "fechanac"  => $fechaNac,
