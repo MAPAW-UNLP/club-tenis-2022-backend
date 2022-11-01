@@ -122,12 +122,19 @@ class ReservaController extends AbstractController
             "telefono"    => isset($parametros['telefono']) ? $parametros['telefono']: null,
         );
 
+        $persona_id = null;
+        if (isset($parametros['persona_id'])) {
+            if ( (int) $parametros['persona_id'] > 0){
+                $persona_id = (int) $parametros['persona_id'];
+            }
+        } 
+
         $reservaParam = array(
             "cancha_id"     =>  $parametros['cancha_id'],
             "fecha"         =>  new DateTime($parametros['fecha']),
             "hora_ini"      =>  new DateTime($parametros['hora_ini']),
             "hora_fin"      =>  new DateTime($parametros['hora_fin']),
-            "persona_id"    =>  isset($parametros['persona_id'])? $parametros['persona_id']:null,
+            "persona_id"    =>  $persona_id,
             "replica"       =>  (isset($parametros['replica']) && $parametros['replica'] == 'true')? true:false,
             "estado_id"     =>  0,
             "grupo"         => isset($parametros['grupo_ids'])? $parametros['grupo_ids']:null,
