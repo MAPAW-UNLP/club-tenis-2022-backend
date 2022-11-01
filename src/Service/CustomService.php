@@ -38,7 +38,7 @@ class CustomService
         $grupo = [];
         $titularReservaObj = null;
 
-        if ($reserva->getPersonaId() != null) {
+        if ($reserva->getPersonaId() != null && $reserva->getPersonaId() != 0) {
             // es clase
             
             $titularReservaObj = $this->getPersonaByPersonaId($reserva->getPersonaId());
@@ -101,7 +101,7 @@ class CustomService
             "nombre" => $persona->getNombre(),
             // "apellido" => $persona->getApellido(),
             "telefono" => $persona->getTelefono(),
-            "fechanac" => $this->getFormattedDate($persona->getFechaNac()),
+            //"fechanac" => $this->getFormattedDate($persona->getFechaNac()),
             "esalumno" => $persona->isEsAlumno(),
             "visible" => $persona->isVisible(),
         );
@@ -112,7 +112,7 @@ class CustomService
     public function getClienteByReservaId($reservaId){
 
         $cliente = $this->em->getRepository(Alquiler::class)->findAlquilerByReservaId($reservaId);
-
+        if($cliente != null){
         $clienteObj = array(
             "nombre" => $cliente->getNombre(),
             // "apellido" => $cliente->getApellido(),
@@ -120,7 +120,7 @@ class CustomService
         );
         // dd($cliente, $clienteObj);
 
-        return $clienteObj;
+        return $clienteObj;}
     }
 
     public function getLastReservaId(){
