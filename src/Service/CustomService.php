@@ -88,8 +88,9 @@ class CustomService
 
     public function getFormattedDate(DateTime $fecha)
     {
-        // return $fecha->format('d-m-Y');
+
         return $fecha->format('Y-m-d');
+ 
     }
 
     public function getPersonaByPersonaId($personaId)
@@ -101,7 +102,7 @@ class CustomService
             "nombre" => $persona->getNombre(),
             // "apellido" => $persona->getApellido(),
             "telefono" => $persona->getTelefono(),
-            "fechanac" => $this->getFormattedDate($persona->getFechaNac()),
+            "fechanac" => $persona->getFechaNac() != null ? $this->getFormattedDate($persona->getFechaNac()) : null,
             "esalumno" => $persona->isEsAlumno(),
             "visible" => $persona->isVisible(),
         );
