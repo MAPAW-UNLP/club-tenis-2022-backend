@@ -36,8 +36,7 @@ class PersonaController extends AbstractController
         $nombre = $data->nombre;
         $telefono = $data->telefono;
         $esAlumno = isset($data->esalumno) && $data->esalumno == 'true'? true: false;
-        $fechaNac = $esAlumno && isset($data->fechanac) ? new DateTime($data->fechanac): null;
-        
+        $fechaNac = $esAlumno && isset($data->fechanac) &&  strlen($data->fechanac) > 0 ? new DateTime($data->fechanac): null;
 
         $persona = new Persona();
         $persona->setNombre($nombre);

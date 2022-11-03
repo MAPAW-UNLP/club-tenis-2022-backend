@@ -112,18 +112,19 @@ class CustomService
     public function getClienteByReservaId($reservaId){
 
         $cliente = $this->em->getRepository(Alquiler::class)->findAlquilerByReservaId($reservaId);
-        if($cliente != null){
-        $clienteObj = array(
-            "nombre" => $cliente->getNombre(),
-            // "apellido" => $cliente->getApellido(),
-            "telefono" => $cliente->getTelefono(),
-        );
-        // dd($cliente, $clienteObj);
 
-        return $clienteObj;
-    }else{
-        return null;
-    }
+        if ($cliente != null){
+
+            $clienteObj = array(
+                "nombre" => $cliente->getNombre(),
+                // "apellido" => $cliente->getApellido(),
+                "telefono" => $cliente->getTelefono(),
+            );
+            return $clienteObj;
+        } else {
+            return null;
+        }
+        // dd($cliente, $clienteObj);
     }
 
     public function getLastReservaId(){
