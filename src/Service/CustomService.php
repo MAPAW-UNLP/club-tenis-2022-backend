@@ -120,7 +120,10 @@ class CustomService
         );
         // dd($cliente, $clienteObj);
 
-        return $clienteObj;}
+        return $clienteObj;
+    }else{
+        return null;
+    }
     }
 
     public function getLastReservaId(){
