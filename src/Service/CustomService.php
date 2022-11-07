@@ -38,7 +38,7 @@ class CustomService
         $grupo = [];
         $titularReservaObj = null;
 
-        if ($reserva->getPersonaId() != null) {
+        if ($reserva->getPersonaId() != null && $reserva->getPersonaId() != 0) {
             // es clase
             
             $titularReservaObj = $this->getPersonaByPersonaId($reserva->getPersonaId());
@@ -102,7 +102,7 @@ class CustomService
             "nombre" => $persona->getNombre(),
             // "apellido" => $persona->getApellido(),
             "telefono" => $persona->getTelefono(),
-            "fechanac" => $persona->getFechaNac() != null ? $this->getFormattedDate($persona->getFechaNac()) : null,
+            // "fechanac" => $persona->getFechaNac() != null ? $this->getFormattedDate($persona->getFechaNac()) : null,
             "esalumno" => $persona->isEsAlumno(),
             "visible" => $persona->isVisible(),
         );
@@ -126,7 +126,6 @@ class CustomService
             return null;
         }
         // dd($cliente, $clienteObj);
-
     }
 
     public function getLastReservaId(){
