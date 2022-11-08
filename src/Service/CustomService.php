@@ -98,6 +98,7 @@ class CustomService
         $persona = $this->em->getRepository(Persona::class)->findOneById($personaId);
         // dd($persona);
         $personaObj = array(
+            "id" => $persona->getId(),
             "nombre" => $persona->getNombre(),
             // "apellido" => $persona->getApellido(),
             "telefono" => $persona->getTelefono(),
