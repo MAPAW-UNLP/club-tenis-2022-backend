@@ -256,4 +256,46 @@ class ReservaController extends AbstractController
         return $this->json($resp);
 
     }
+
+      /**
+     * @Route("/clase_reserva", name="mod_clase_reserva", methods={"PUT"})
+     */
+    public function modClaseReserva(Request $request, ManagerRegistry $doctrine ): Response
+    {
+        $reservaId = $request->request->get('reserva_id');
+        $profesorId  = $request->request->get('persona_id');
+        $grupoIds  = $request->request->get('grupo_ids');
+
+        $ids_grupo = explode(',',$grupoIds);
+
+        $em = $doctrine->getManager();
+
+        $grupoViejo = $em->getRepository(Grupo::class)->findPersonasGrupoIdByReservaId($reservaId);
+        // dd($grupoViejo, $ids_grupo);
+        foreach($grupoViejo as $personaGrupoViejo){
+            $em->getRepository(Grupo::class)->remove($personaGrupoViejo);
+        }
+
+        foreach($ids_grupo as $alumno_id){
+            if (is_numeric($alumno_id)){
+                $grupo_alumno = new Grupo();
+                $grupo_alumno->setReservaId($reservaId);
+                $grupo_alumno->setPersonaId($alumno_id);
+                $em->persist($grupo_alumno);
+            }
+        }
+
+        $reserva = $em->getRepository(Reserva::class)->findOneById($reservaId);
+        $reserva->setPersonaId($profesorId);
+        $em->flush();
+
+        $resp = array();
+
+        $resp['rta'] =  "ok";
+        $resp['detail'] = "Reserva (clase) modificada correctamente";
+
+
+        return $this->json($resp);
+
+    }
 }
