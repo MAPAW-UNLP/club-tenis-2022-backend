@@ -160,6 +160,8 @@ class ReservaController extends AbstractController
         $lastReservaId = (int) $cs->getLastReservaId();
         $idReserva = $lastReservaId + 1;
 
+        $procesarReplicas = false;
+
         if ($reservaParam['persona_id'] != null){
             $ids_grupo = explode(',',$reservaParam['grupo']);
             foreach($ids_grupo as $alumno_id){
@@ -170,6 +172,8 @@ class ReservaController extends AbstractController
                     $em->persist($grupo_alumno);
                 }
             }
+            
+            if ($reservaParam['replica']) $procesarReplicas = true;
 
         } else {
             $alquiler = new Alquiler();
@@ -182,6 +186,10 @@ class ReservaController extends AbstractController
 
         $em->flush();
 
+
+        if ($procesarReplicas){
+            $cs->replicarReserva($idReserva);
+        }
 
         $resp = array();
 
@@ -297,5 +305,21 @@ class ReservaController extends AbstractController
 
         return $this->json($resp);
 
+    }
+
+    // endpoint de desarrollo y pruebas
+    /**
+     * @Route("/reservas_test", name="app_reservas_test", methods={"GET"})
+     */
+    public function getReservasTest(
+        Request $request,
+        ServiceCustomService $cs
+    ): Response {
+        $reservaId = $request->query->get('reservaId');
+
+        $cs->replicarReserva($reservaId);
+
+
+        return $this->json(array());
     }
 }

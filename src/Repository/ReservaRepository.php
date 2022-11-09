@@ -62,6 +62,38 @@ class ReservaRepository extends ServiceEntityRepository
        ;
    }
 
+   public function findOneById($id): ?Reserva
+   {
+       return $this->createQueryBuilder('c')
+           ->andWhere('c.id = :val')
+           ->setParameter('val', $id)
+           ->getQuery()
+           ->getOneOrNullResult();
+   }
+
+//    public function findOverlap($fecha, $horaIni, $horaFin){ // TODO: implementar funcion
+//     $entityManager = $this->getEntityManager();
+
+//     $query = $entityManager->createQuery(
+//         'SELECT  r
+//         FROM App\Entity\Reserva r
+//         WHERE r.fecha = :fecha
+//         and (r.hora_ini <= :horafin
+//         or r.hora_fin >= :horaini )
+//         '
+//     )->setParameter('fecha', $fecha)
+//     ->setParameter('horafin', $horaFin)
+//     ->setParameter('horaini', $horaIni);
+
+//     // returns an array of Product objects
+//     $busqueda = $query->getResult();
+    
+//     if (count($busqueda) > 0)
+//         return $query->getResult()[0];
+//     else 
+//         return null;
+//    }
+
 
 
 //    /**

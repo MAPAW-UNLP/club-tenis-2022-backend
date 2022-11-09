@@ -153,5 +153,55 @@ class CustomService
 
     }
 
+    public function replicarReserva($reservaId){
+
+        $clase = $this->em->getRepository(Reserva::class)->findOneById($reservaId);
+        $grupo = $this->em->getRepository(Grupo::class)->findPersonasGrupoIdByReservaId($reservaId);
+
+        $fechaReserva = $clase->getFecha();
+        $fecha = clone $clase->getFecha();
+
+        $nroMesActual = date('m');
+
+        $mesProximo = new DateTime();
+        date_add($mesProximo, date_interval_create_from_date_string("1 month"));
+        $nroMesProximo = $mesProximo->format('m');
+
+        
+        for ($i = 0; $i < 10 ; $i++ ){
+            
+            date_add($fecha, date_interval_create_from_date_string("7 days"));
+
+            $idCancha = $this->getIdCanchaDisponible($clase, $fecha);
+            
+            if (($fecha->format('m') == $nroMesActual || $fecha->format('m') == $nroMesProximo) && $idCancha > 0) {
+
+                
+
+                $reservaReplicada = clone $clase;
+                $reservaReplicada->setFecha(clone $fecha);
+                $reservaReplicada->setCanchaId($idCancha);
+                $this->em->persist($reservaReplicada);
+                $this->em->flush();
+
+                $idUltimaReserva = $this->getLastReservaId();
+                foreach ($grupo as $itemGrupo){
+                    $itemReplicado = clone $itemGrupo;
+                    $itemReplicado->setReservaId($idUltimaReserva);
+                    $this->em->persist($itemReplicado);
+                }
+                $this->em->flush();
+            } 
+        }
+        
+    }
+
+    public function getIdCanchaDisponible($clase, $fecha){
+
+        // devolver id de la cancha disponible, preferentemente la original
+        // devolver 0 si no hay turno disponible en ninguna cancha
+        return $clase->getCanchaId();
+
+    }
 
 }
