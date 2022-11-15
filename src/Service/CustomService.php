@@ -7,10 +7,12 @@ date_default_timezone_set('America/Buenos_Aires');
 use App\Entity\Alquiler;
 use App\Entity\Cancha;
 use App\Entity\Grupo;
+use App\Entity\Pagos;
 use App\Entity\Persona;
 use App\Entity\Reserva;
 use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Validator\Constraints\Date;
 
 class CustomService
 {
@@ -201,6 +203,17 @@ class CustomService
         // devolver id de la cancha disponible, preferentemente la original
         // devolver 0 si no hay turno disponible en ninguna cancha
         return $clase->getCanchaId();
+
+    }
+
+    public function registrarPago($idPersona, $idTipoClase, $cantidad, $fecha){
+
+        $pago = new Pagos();
+        $pago->setIdPersona($idPersona)->setIdTipoClase($idTipoClase)->setCantidad($cantidad);
+        $fechaPago = isset($fecha)? $fecha : new Date();
+        $pago->setFecha($fechaPago);
+        $this->em->persist($pago);
+        $this->em->flush();
 
     }
 
