@@ -27,6 +27,16 @@ class Usuario
      */
     private $password;
 
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $fechapagos;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $fechareplica;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -52,6 +62,30 @@ class Usuario
     public function setPassword(string $password): self
     {
         $this->password = $password;
+
+        return $this;
+    }
+
+    public function getFechapagos(): ?\DateTimeInterface
+    {
+        return $this->fechapagos;
+    }
+
+    public function setFechapagos(?\DateTimeInterface $fechapagos): self
+    {
+        $this->fechapagos = $fechapagos;
+
+        return $this;
+    }
+
+    public function getFechareplica(): ?\DateTimeInterface
+    {
+        return $this->fechareplica;
+    }
+
+    public function setFechareplica(?\DateTimeInterface $fechareplica): self
+    {
+        $this->fechareplica = $fechareplica;
 
         return $this;
     }

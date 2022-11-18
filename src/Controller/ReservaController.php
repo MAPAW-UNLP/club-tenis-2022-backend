@@ -307,6 +307,24 @@ class ReservaController extends AbstractController
 
     }
 
+
+    /**
+     * @Route("/liquidar_reservas", name="app_liquidar_reservas", methods={"POST"})
+     */
+    public function liquidarReservas(
+        ServiceCustomService $cs
+    ): Response {
+
+        $cs->liquidarReservas();
+
+
+        $resp['rta'] =  "ok";
+        $resp['detail'] = "Se liquidaron las clases hasta ayer";
+
+
+        return $this->json($resp);
+    }
+
     // endpoint de desarrollo y pruebas
     /**
      * @Route("/reservas_test", name="app_reservas_test", methods={"GET"})
@@ -322,4 +340,6 @@ class ReservaController extends AbstractController
 
         return $this->json(array());
     }
+
+
 }

@@ -52,6 +52,11 @@ class Reserva
      */
     private $estado_id;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $idTipoClase;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -137,6 +142,18 @@ class Reserva
     public function setEstadoId(int $estado_id): self
     {
         $this->estado_id = $estado_id;
+
+        return $this;
+    }
+
+    public function getIdTipoClase(): ?int
+    {
+        return $this->idTipoClase;
+    }
+
+    public function setIdTipoClase(?int $idTipoClase): self
+    {
+        $this->idTipoClase = $idTipoClase;
 
         return $this;
     }
