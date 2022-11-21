@@ -10,6 +10,7 @@ use App\Entity\Grupo;
 use App\Entity\Pagos;
 use App\Entity\Persona;
 use App\Entity\Reserva;
+use App\Entity\Usuario;
 use DateTime;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Validator\Constraints\Date;
@@ -213,6 +214,44 @@ class CustomService
         $fechaPago = isset($fecha)? $fecha : new Date();
         $pago->setFecha($fechaPago);
         $this->em->persist($pago);
+        $this->em->flush();
+
+    }
+
+
+    public function liquidarReservas(){
+
+        $usuarioDB = $this->em->getRepository(Usuario::class)->findOneByUsername('admin');
+        $fechaPagos = $usuarioDB->getFechapagos();
+
+        $fechaDesde = $fechaPagos != null ? $fechaPagos : new DateTime('2022-01-01');
+      
+        $fechaHasta = new DateTime('yesterday');
+        
+        
+        $reservas =  $this->em->getRepository(Reserva::class)->findReservasBetweenDates($fechaDesde, $fechaHasta);
+        // dd($fechaDesde, $fechaHasta, $reservas);
+        foreach($reservas as $reserva){
+
+            $idPersonasGrupo = $this->em->getRepository(Grupo::class)->findPersonasGrupoIdByReservaId($reserva->getId());
+            // dd($idPersonasGrupo);
+
+            foreach($idPersonasGrupo as $personaId){
+
+
+                $pago = new Pagos();
+                $pago->setIdPersona($personaId->getPersonaId());
+                $pago->setFecha($reserva->getFecha());
+                $tipoClase = $reserva->getIdTipoClase() != null ? $reserva->getIdTipoClase() : 2;
+                $pago->setIdTipoClase($tipoClase);
+                $pago->setCantidad(-1);
+                $this->em->persist($pago);
+
+            }
+            
+        }
+        $usuarioDB->setFechapagos($fechaHasta);
+        $this->em->persist($usuarioDB);
         $this->em->flush();
 
     }

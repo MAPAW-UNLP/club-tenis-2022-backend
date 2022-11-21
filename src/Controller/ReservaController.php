@@ -333,9 +333,12 @@ class ReservaController extends AbstractController
         Request $request,
         ServiceCustomService $cs
     ): Response {
-        $reservaId = $request->query->get('reservaId');
+        // $reservaId = $request->query->get('reservaId');
 
-        $cs->replicarReserva($reservaId);
+        // $cs->replicarReserva($reservaId);
+
+        $cs->liquidarReservas();
+
 
 
         return $this->json(array());
