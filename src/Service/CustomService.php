@@ -228,31 +228,32 @@ class CustomService
       
         $fechaHasta = new DateTime('yesterday');
         
-        
-        $reservas =  $this->em->getRepository(Reserva::class)->findReservasBetweenDates($fechaDesde, $fechaHasta);
-        // dd($fechaDesde, $fechaHasta, $reservas);
-        foreach($reservas as $reserva){
+        if ( $fechaDesde != $fechaHasta){
 
-            $idPersonasGrupo = $this->em->getRepository(Grupo::class)->findPersonasGrupoIdByReservaId($reserva->getId());
-            // dd($idPersonasGrupo);
-
-            foreach($idPersonasGrupo as $personaId){
-
-
-                $pago = new Pagos();
-                $pago->setIdPersona($personaId->getPersonaId());
-                $pago->setFecha($reserva->getFecha());
-                $tipoClase = $reserva->getIdTipoClase() != null ? $reserva->getIdTipoClase() : 2;
-                $pago->setIdTipoClase($tipoClase);
-                $pago->setCantidad(-1);
-                $this->em->persist($pago);
-
-            }
             
-        }
-        $usuarioDB->setFechapagos($fechaHasta);
-        $this->em->persist($usuarioDB);
-        $this->em->flush();
+            $reservas =  $this->em->getRepository(Reserva::class)->findReservasBetweenDates($fechaDesde, $fechaHasta);
+            foreach($reservas as $reserva){
+                
+                $idPersonasGrupo = $this->em->getRepository(Grupo::class)->findPersonasGrupoIdByReservaId($reserva->getId());
+                
+                foreach($idPersonasGrupo as $personaId){
+                    
+                    
+                    $pago = new Pagos();
+                    $pago->setIdPersona($personaId->getPersonaId());
+                    $pago->setFecha($reserva->getFecha());
+                    $tipoClase = $reserva->getIdTipoClase() != null ? $reserva->getIdTipoClase() : 2;
+                    $pago->setIdTipoClase($tipoClase);
+                    $pago->setCantidad(-1);
+                    $this->em->persist($pago);
+                    
+                }
+                
+            }
+            $usuarioDB->setFechapagos($fechaHasta);
+            $this->em->persist($usuarioDB);
+            $this->em->flush();
+        } 
 
     }
 
