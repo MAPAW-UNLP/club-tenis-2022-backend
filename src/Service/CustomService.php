@@ -158,7 +158,14 @@ class CustomService
 
     public function replicarReserva($reservaId){
 
+
+
         $clase = $this->em->getRepository(Reserva::class)->findOneById($reservaId);
+
+        if (! $clase->isReplica()){
+            return;
+        }
+
         $grupo = $this->em->getRepository(Grupo::class)->findPersonasGrupoIdByReservaId($reservaId);
 
         $fechaReserva = $clase->getFecha();
@@ -204,7 +211,7 @@ class CustomService
         // devolver id de la cancha disponible, preferentemente la original
         // devolver 0 si no hay turno disponible en ninguna cancha
 
-        
+
         $clase = clone $claseOrig;
         $clase->setFecha($fecha);
 

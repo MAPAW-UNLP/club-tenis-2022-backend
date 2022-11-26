@@ -187,9 +187,7 @@ class ReservaController extends AbstractController
         $em->flush();
 
 
-        if ($procesarReplicas){
-            $cs->replicarReserva($idReserva);
-        }
+        $cs->replicarReserva($idReserva); //lo hace si esta en true replica
 
         $resp = array();
 
