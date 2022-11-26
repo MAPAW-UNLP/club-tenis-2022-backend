@@ -199,12 +199,85 @@ class CustomService
         
     }
 
-    public function getIdCanchaDisponible($clase, $fecha){
-
+    public function getIdCanchaDisponible($claseOrig, $fecha){
+        
         // devolver id de la cancha disponible, preferentemente la original
         // devolver 0 si no hay turno disponible en ninguna cancha
-        return $clase->getCanchaId();
 
+        
+        $clase = clone $claseOrig;
+        $clase->setFecha($fecha);
+
+        $canchaPreferida = $this->em->getRepository(Cancha::class)->findOneById($clase->getCanchaId());
+        $canchas =  $this->em->getRepository(Cancha::class)->findAll();
+
+
+        if ($this->isCanchaDisponibleEnTurno($canchaPreferida->getId(), $clase)){
+
+            // dd("cancha original disponible", $clase->getCanchaId(), $clase, $fecha); die; // TODO: quitar
+
+            return $clase->getCanchaId();
+        } else {
+
+            foreach($canchas as $cancha){
+
+                if ($cancha->getId() == $canchaPreferida->getId()){
+                    continue;
+                }
+
+                if  ($this->isCanchaDisponibleEnTurno($cancha->getId(), $clase)){
+                    // dd("cancha alternativa disponible",  $cancha->getId(), $clase, $fecha); die; // TODO: quitar
+
+                    return $cancha->getId();
+                }
+            }
+
+            // dd("no hay cancha disponible",  $cancha->getId(), $clase, $fecha, ); die; // TODO: quitar
+
+            return 0; // si llego aca es que no hay cancha disponible
+        }
+
+
+
+        // dd($canchaPreferida,$canchas);
+
+
+
+    }
+
+    public function isCanchaDisponibleEnTurno($id, $clase){
+
+
+        
+        $reservasEnCanchaYFecha = $this->em->getRepository(Reserva::class)->findReservasBycanchaIdAndDate($id, $clase->getFecha());
+        $disponible = true;
+        
+        $claseHoraIni = clone $clase->getHoraIni();
+        $claseHoraIni->setDate(2000,01,01);
+        $claseHoraFin = clone $clase->getHoraFin();
+        $claseHoraFin->setDate(2000,01,01);
+        
+        // dd( $clase->getHoraFin(),  $clase->getHoraIni());
+        
+        foreach($reservasEnCanchaYFecha as $reserva){
+            
+            $reservaHoraIni = clone $reserva->getHoraIni();
+            $reservaHoraIni->setDate(2000,01,01);
+            $reservaHoraFin =  clone $reserva->getHoraFin();
+            $reservaHoraFin->setDate(2000,01,01);
+
+            // dd ($reservaHoraIni, $reservaHoraFin , $claseHoraIni, $claseHoraFin, $reservaHoraIni > $claseHoraIni, $reservaHoraIni >= $claseHoraIni);die;
+
+
+            if ( ! ($claseHoraFin <= $reservaHoraIni) && ! ($claseHoraIni >= $reservaHoraFin)){
+                $disponible = false;
+                break;
+            }
+
+        }
+
+
+        return $disponible;
     }
 
     public function registrarPago($idPersona, $idTipoClase, $cantidad, $fecha){

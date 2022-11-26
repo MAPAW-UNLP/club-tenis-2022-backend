@@ -48,6 +48,18 @@ class CanchaRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+
+        /**
+        * @return Cancha[] Returns an array of Cancha objects
+        */
+       public function findAll(): array
+       {
+           return $this->createQueryBuilder('c')
+               ->getQuery()
+               ->getResult()
+           ;
+       }
+
     //    /**
     //     * @return Cancha[] Returns an array of Cancha objects
     //     */
