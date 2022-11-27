@@ -275,7 +275,7 @@ class ReservaController extends AbstractController
         $ids_grupo = explode(',',$grupoIds);
 
         $em = $doctrine->getManager();
-
+        
         $grupoViejo = $em->getRepository(Grupo::class)->findPersonasGrupoIdByReservaId($reservaId);
         // dd($grupoViejo, $ids_grupo);
         foreach($grupoViejo as $personaGrupoViejo){
@@ -293,6 +293,13 @@ class ReservaController extends AbstractController
 
         $reserva = $em->getRepository(Reserva::class)->findOneById($reservaId);
         $reserva->setPersonaId($profesorId);
+
+        if ($request->get('fecha')!=null){
+            $reserva->setFecha(new DateTime($request->get('fecha')));
+            $reserva->setHoraIni(new DateTime($request->get('hora_ini')));
+            $reserva->setHoraFin(new DateTime($request->get('hora_fin')));
+        }
+
         $em->flush();
 
         $resp = array();
