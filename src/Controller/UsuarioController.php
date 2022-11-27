@@ -8,6 +8,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Service\CustomService as ServiceCustomService;
+
 
     /**
      * @Route(path="/api")
@@ -27,7 +29,10 @@ class UsuarioController extends AbstractController
     /**
      * @Route("/usuario", name="check_login", methods={"POST"})
      */
-    public function checkLogin(Request $request, ManagerRegistry $doctrine ): Response
+    public function checkLogin(
+        Request $request, 
+        ManagerRegistry $doctrine ,
+        ServiceCustomService $cs): Response
     {
 
         // $user = $request->request->get('user');
@@ -49,6 +54,9 @@ class UsuarioController extends AbstractController
                 "detail"=> "nombre de usuario y/o contrase&ntilde;a es invalido(2)."
             );
         } else {
+
+            $cs->procesamientoInicial();
+
             $userDB = array(
                 "rta" => "ok",
                 "detail"=> $userDB->getId()

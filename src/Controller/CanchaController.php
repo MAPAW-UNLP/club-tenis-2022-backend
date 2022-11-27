@@ -85,7 +85,7 @@ class CanchaController extends AbstractController
 
         $em = $doctrine->getManager();
         $cancha = $em->getRepository(Cancha::class)->findOneById($id);
-        dd($cancha);
+        // dd($cancha);
         $cancha->setNombre($name);
 
         $em = $doctrine->getManager();

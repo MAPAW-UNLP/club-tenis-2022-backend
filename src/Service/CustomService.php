@@ -9,6 +9,7 @@ use App\Entity\Cancha;
 use App\Entity\Grupo;
 use App\Entity\Pagos;
 use App\Entity\Persona;
+use App\Entity\Replicas;
 use App\Entity\Reserva;
 use App\Entity\Usuario;
 use DateTime;
@@ -156,9 +157,7 @@ class CustomService
 
     }
 
-    public function replicarReserva($reservaId){
-
-
+    public function replicarReservaNueva($reservaId){
 
         $clase = $this->em->getRepository(Reserva::class)->findOneById($reservaId);
 
@@ -186,8 +185,6 @@ class CustomService
             
             if (($fecha->format('m') == $nroMesActual || $fecha->format('m') == $nroMesProximo) && $idCancha > 0) {
 
-                
-
                 $reservaReplicada = clone $clase;
                 $reservaReplicada->setFecha(clone $fecha);
                 $reservaReplicada->setCanchaId($idCancha);
@@ -203,6 +200,29 @@ class CustomService
                 $this->em->flush();
             } 
         }
+
+        $this->guardarOActualizarReplicas($reservaId, $nroMesProximo  );
+
+    }
+
+    public function guardarOActualizarReplicas($idReserva, $ultimoMes){
+
+        $replicaEncontrada = $this->em->getRepository(Replicas::class)->findOneByReservaId($idReserva);
+
+        if (isset($replicaEncontrada)){
+
+            $replicaEncontrada->setUltimoMes($ultimoMes);
+            $this->em->persist($replicaEncontrada);
+
+        } else {
+
+            $replica = new Replicas();
+            $replica ->setIdReserva( $idReserva);
+            $replica->setUltimoMes($ultimoMes);
+            $this->em->persist($replica);
+        }
+
+        $this->em->flush();
         
     }
 
@@ -336,5 +356,79 @@ class CustomService
         } 
 
     }
+
+
+    public function procesarReplicas(){
+
+        $replicas = $this->em->getRepository(Replicas::class)->findAll();
+
+        foreach($replicas as $replica){
+
+            $this->replicarReservaReplicada($replica->getIdReserva(), $replica->getUltimoMes());
+
+        }
+    }
+
+    public function replicarReservaReplicada($reservaId, $replicadaHastaMes){
+        
+        $fechaHoy = new DateTime();
+        $mesActual = $fechaHoy->format('m');
+
+        if ($mesActual != $replicadaHastaMes){
+            return;
+        }
+
+
+        $clase = $this->em->getRepository(Reserva::class)->findOneById($reservaId);
+
+        $grupo = $this->em->getRepository(Grupo::class)->findPersonasGrupoIdByReservaId($reservaId);
+
+        $fecha = clone $clase->getFecha();
+
+        $nroMesProximo = $replicadaHastaMes < 12 ? $replicadaHastaMes + 1 : 1;
+
+
+
+        do { // sumo una semana hasta llegar al mes que hay que replicar
+            date_add($fecha, date_interval_create_from_date_string("7 days"));
+        } while ( $fecha->format('m') != $nroMesProximo );
+        
+        
+        do{ // guardo clases nuevas hasta terminar el mes
+            
+            $idCancha = $this->getIdCanchaDisponible($clase, $fecha);
+            
+            if (  $idCancha > 0) {
+
+                $reservaReplicada = clone $clase;
+                $reservaReplicada->setFecha(clone $fecha);
+                $reservaReplicada->setCanchaId($idCancha);
+                $this->em->persist($reservaReplicada);
+                $this->em->flush();
+
+                $idUltimaReserva = $this->getLastReservaId();
+                foreach ($grupo as $itemGrupo){
+                    $itemReplicado = clone $itemGrupo;
+                    $itemReplicado->setReservaId($idUltimaReserva);
+                    $this->em->persist($itemReplicado);
+                }
+                $this->em->flush();
+            } 
+
+            date_add($fecha, date_interval_create_from_date_string("7 days"));
+
+        } while ( $fecha->format('m') == $nroMesProximo );
+
+        $this->guardarOActualizarReplicas($reservaId, $nroMesProximo  );
+
+    }
+
+    public function procesamientoInicial(){
+
+        $this->procesarReplicas();
+        $this->liquidarReservas();
+
+    }
+
 
 }

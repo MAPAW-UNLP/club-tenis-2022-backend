@@ -187,7 +187,7 @@ class ReservaController extends AbstractController
         $em->flush();
 
 
-        $cs->replicarReserva($idReserva); //lo hace si esta en true replica
+        $cs->replicarReservaNueva($idReserva); //lo hace si esta en true replica
 
         $resp = array();
 
@@ -333,7 +333,7 @@ class ReservaController extends AbstractController
     ): Response {
         $reservaId = $request->query->get('reservaId');
 
-        $cs->replicarReserva($reservaId);
+        $cs->procesarReplicas();
 
         // $cs->liquidarReservas();
 
@@ -344,3 +344,5 @@ class ReservaController extends AbstractController
 
 
 }
+// TODO: hacer metodo que replique reservas desde la fecha guardada en usuarios hasta ayer
+// analogo a la liquidacion de reservas
