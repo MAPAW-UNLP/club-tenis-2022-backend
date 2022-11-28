@@ -17,6 +17,34 @@ use Symfony\Component\HttpFoundation\Request;
 
 class PagosController extends AbstractController
 {
+
+     /**
+     * @Route("/pagos", name="get_pagos", methods={"GET"})
+     */
+    public function getPagos(
+        Request $request,
+        ManagerRegistry $doctrine,
+        ServiceCustomService $cs
+    ): Response
+    {
+
+        $em = $doctrine->getManager();
+
+        $pagos = $em->getRepository( Pagos::class )->findAll();
+
+        // dd($pagos);
+        $objPagos = array();
+        foreach($pagos as $pago){
+
+           array_push($objPagos, array(
+            "idTipoClase" => $pago->getIdTipoClase(), 
+            "cantidad" => $pago->getCantidad(), 
+            "fecha" => $cs->getFormattedDate($pago->getFecha())));
+        }
+        return $this->json($objPagos);
+    }
+
+
     /**
      * @Route("/pagos_por_persona", name="app_Pagos_personaId", methods={"GET"})
      */

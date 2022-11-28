@@ -54,6 +54,17 @@ class PagosRepository extends ServiceEntityRepository
        ;
    }
 
+        /**
+        * @return Pagos[] Returns an array of Pagos objects
+        */
+        public function findAll(): array
+        {
+            return $this->createQueryBuilder('c')
+                ->getQuery()
+                ->getResult()
+            ;
+        }
+
 
 //    /**
 //     * @return Pagos[] Returns an array of Pagos objects
