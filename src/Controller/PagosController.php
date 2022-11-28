@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Pagos;
+use App\Entity\Persona;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,7 +37,11 @@ class PagosController extends AbstractController
         $objPagos = array();
         foreach($pagos as $pago){
 
+            $nombrePersona =  $em->getRepository( Persona ::class )->findOneById($pago->getIdPersona())->getNombre();
+
            array_push($objPagos, array(
+            "idPersona" => $pago->getIdPersona(),
+            "nombrePersona" => $nombrePersona,
             "idTipoClase" => $pago->getIdTipoClase(), 
             "cantidad" => $pago->getCantidad(), 
             "fecha" => $cs->getFormattedDate($pago->getFecha())));
