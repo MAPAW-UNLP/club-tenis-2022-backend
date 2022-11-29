@@ -6,6 +6,7 @@ date_default_timezone_set('America/Buenos_Aires');
 
 use App\Entity\Alquiler;
 use App\Entity\Cancha;
+use App\Entity\Clases;
 use App\Entity\Grupo;
 use App\Entity\Pagos;
 use App\Entity\Persona;
@@ -76,12 +77,21 @@ class CustomService
             "titular" => $titularReservaObj,
             "replica" => $reserva->isReplica(),
             "estado" => $this->estadosArr[$reserva->getEstadoId()],
-            "tipo" => $reserva->getPersonaId() != null ? 'CLASE' : 'ALQUILER',
+            "tipo" => $reserva->getIdTipoClase() != null ? $this->getInfoTipoClase($reserva->getIdTipoClase())[0] : 'ALQUILER',
+            "idTipo" => $reserva->getIdTipoClase() != null ?$reserva->getIdTipoClase() : '0',
             "grupo" => $grupo
 
         );
 
         return $reservaObj;
+    }
+
+    public function getInfoTipoClase($idTipoClase){
+        $clase = $this->em->getRepository(Clases::class)->findOneById($idTipoClase);
+        
+        // dd($clase);
+        return array($clase->getTipo(), $clase->getImporte());
+
     }
 
     public function getFormattedTime(DateTime $time)

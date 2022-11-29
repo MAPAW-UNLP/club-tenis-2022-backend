@@ -138,6 +138,7 @@ class ReservaController extends AbstractController
             "replica"       =>  (isset($parametros['replica']) && $parametros['replica'] == 'true')? true:false,
             "estado_id"     =>  0,
             "grupo"         => isset($parametros['grupo_ids'])? $parametros['grupo_ids']:null,
+            "tipo"          =>  $parametros['tipo'],
         );
 
 
@@ -153,6 +154,8 @@ class ReservaController extends AbstractController
         $reserva->setPersonaId($reservaParam['persona_id']);
         $reserva->setReplica($reservaParam['replica']);
         $reserva->setEstadoId($reservaParam['estado_id']);
+        $reserva->setIdTipoClase($reservaParam['tipo']);
+        
 
         $reservaId =  $em->persist($reserva);
         

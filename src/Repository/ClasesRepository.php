@@ -39,6 +39,26 @@ class ClasesRepository extends ServiceEntityRepository
         }
     }
 
+    public function findOneById($id): ?Clases
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.id = :val')
+            ->setParameter('val', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+    * @return Clases[] Returns an array of Clases objects
+    */
+    public function findAll(): array
+    {
+        return $this->createQueryBuilder('c')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
 //    /**
 //     * @return Clases[] Returns an array of Clases objects
 //     */
