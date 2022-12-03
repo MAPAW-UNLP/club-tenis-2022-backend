@@ -27,6 +27,21 @@ class PersonaController extends AbstractController
     }
 
     /**
+     * @Route("/persona", name="app_personas", methods={"GET"})
+     */
+    public function getPersona(
+        Request $request,
+        ManagerRegistry $doctrine,
+        ServiceCustomService $cs
+    ): Response
+    {
+        $personaId = $request->query->get('personaId');
+        $em = $doctrine->getManager();
+        $persona = $em->getRepository( Persona::class )->findOneById($personaId);
+        return $this->json($persona);
+    }
+
+    /**
      * @Route("/persona", name="app_alta_persona", methods={"POST"})
      */
     public function addPersona(Request $request, ManagerRegistry $doctrine ): Response
