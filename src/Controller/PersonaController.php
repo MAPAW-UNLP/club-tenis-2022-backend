@@ -31,8 +31,7 @@ class PersonaController extends AbstractController
      */
     public function getPersona(
         Request $request,
-        ManagerRegistry $doctrine,
-        ServiceCustomService $cs
+        ManagerRegistry $doctrine
     ): Response
     {
         $personaId = $request->query->get('personaId');
@@ -75,6 +74,50 @@ class PersonaController extends AbstractController
         }
 
         return $this->json(($resp));
+    }
+
+    /**
+     * @Route("/persona", name="app_mod_persona", methods={"PUT"})
+     */
+    public function modPersona(
+        Request $request,
+        ManagerRegistry $doctrine
+    ): Response {
+        $data = json_decode( $request->getContent());
+        $personaId = $data->id;
+        $resp = array();
+        if ($personaId != null) {
+            $em = $doctrine->getManager();
+            $persona = $em->getRepository( Persona::class )->findOneById($personaId);
+            if ($persona!=null){
+                if (isset($data->nombre)){
+                    $persona->setNombre($data->nombre);
+                }
+                if (isset($data->telefono)){
+                    $persona->setTelefono($data->telefono);
+                }
+                if (isset($data->fechaNac)){
+                    $fechaNac = strlen($data->fechanac) > 0 ? new DateTime($data->fechanac): null;
+                    $persona->setFechanac($fechaNac);
+                }
+                if (isset($data->visible)){
+                    $persona->setVisible($data->visible);
+                }
+
+                $em->persist($persona);
+                $em->flush();
+
+                $resp['rta'] =  "ok";
+                $resp['detail'] = "Persona modificada correctamente";
+            } else {
+                $resp['rta'] =  "error";
+                $resp['detail'] = "No existe la persona";
+            }
+        } else {
+            $resp['rta'] =  "error";
+            $resp['detail'] = "Debe proveer un id";
+        }
+        return $this->json($resp);
     }
 
     /**
