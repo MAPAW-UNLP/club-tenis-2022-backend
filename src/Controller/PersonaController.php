@@ -96,7 +96,7 @@ class PersonaController extends AbstractController
                 if (isset($data->telefono)){
                     $persona->setTelefono($data->telefono);
                 }
-                if (isset($data->fechaNac)){
+                if (isset($data->fechanac)){
                     $fechaNac = strlen($data->fechanac) > 0 ? new DateTime($data->fechanac): null;
                     $persona->setFechanac($fechaNac);
                 }
